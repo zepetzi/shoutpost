@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
-import './components/canvaspage/CanvasPage'
-import CanvasPage from './components/canvaspage/CanvasPage'
+import './CanvasPage'
+import CanvasPage from './CanvasPage'
+import { v4 as uuid }  from 'uuid' ;
 
 function App() {
   const [count, setCount] = useState(0)
