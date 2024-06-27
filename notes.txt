@@ -1,0 +1,4 @@
+upload image -> assign uuid -> upload to cloud storage -> get URL and other details -> run cloud function
+ -> use to generate metadata -> store in firestore -> RT stuff pushes to frontend?
+
+ 
