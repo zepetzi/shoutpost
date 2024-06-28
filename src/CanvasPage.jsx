@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 
 
 export default function CanvasPage() {
-    
     const [image, setImage] = useState(null);
     const imageURLRef = useRef(null);
 
