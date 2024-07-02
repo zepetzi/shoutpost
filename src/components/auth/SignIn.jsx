@@ -1,8 +1,11 @@
 import { React, useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './../../firebase';
+import { useNavigate } from 'react-router-dom'; 
 
 export default function SignIn() {
+
+    const navigate = useNavigate();
 
     const [signInData, setSignIn] = useState({email:"", password:""});
 
@@ -23,7 +26,8 @@ export default function SignIn() {
             if (userCredential) {
                 //signed in
                 const user = userCredential.user;
-                console.log(`${user} signed In`);
+                alert(`${user} signed In`);
+                navigate('/canvas');
             }
         } catch (error) {
             console.error(error);
