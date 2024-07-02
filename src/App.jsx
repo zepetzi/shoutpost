@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import './App.css'
-import './CanvasPage'
-import CanvasPage from './CanvasPage'
 import { v4 as uuid }  from 'uuid' ;
+import './App.css';
 import SignIn from './components/auth/SignIn';
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,11 +10,9 @@ function App() {
   return (
     <>
       <div>
-        
         <h1>
-        Test
+        Shoutpost
         </h1>
-
       </div>
 
       <div>
@@ -35,3 +32,5 @@ function App() {
 }
 
 export default App
+
+

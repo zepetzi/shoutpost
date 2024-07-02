@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { useRef, useState } from 'react';
+import { auth } from '../firebase';
 
 
 export default function CanvasPage() {

@@ -19,7 +19,7 @@ export default function SignIn() {
     const authUser = async (evt) => {
         evt.preventDefault();
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, signInData.email, signInData.password);
             if (userCredential) {
                 //signed in
                 const user = userCredential.user;
@@ -32,7 +32,7 @@ export default function SignIn() {
     
     return (
     <>
-    <div className="signin-div">.
+    <div className="signin-div">
             <h1>
                 Log In
             </h1>
@@ -55,6 +55,8 @@ export default function SignIn() {
             />
 
             <button type="submit">Sign In</button>
+
+            <p>{<>Logged In</>}</p>
         </form>    
     </div>
     </>
