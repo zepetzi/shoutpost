@@ -1,8 +1,21 @@
-#root {
-  /* max-width: 1280px; */
+/* #root {
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+} */
+
+#root {
+  border: 1px solid yellow;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display:grid;
+  text-align: center;
+  justify-content: center;
+  /* align-items: center;  */
+  place-items: center;
 }
 
 .logo {

@@ -13,13 +13,13 @@ export default function Canvas(){
 
     return(
     <>
-    <div id='container'>
-        <Stage width={1366} height={768}>
+        
+        <Stage width={1470} height={870}>
             <Layer>
                 <Image image={testImage}></Image>
             </Layer>
-        </Stage>
-    </div>    
+        </Stage>    
+        
     </>
     )
 

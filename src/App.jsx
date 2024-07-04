@@ -9,23 +9,21 @@ function App() {
 
   return (
     <>
-      <div>
+
         <h1>
         Shoutpost
         </h1>
-      </div>
-
-      <div>
-        <SignIn></SignIn>
-      </div>
       
-      <div className="card">
+      <SignIn></SignIn>
+      
+      
+      {/* <div className="card">
 
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
       
-      </div>
+      </div> */}
       
     </>
   )

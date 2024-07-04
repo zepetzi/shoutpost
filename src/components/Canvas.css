@@ -10,34 +10,9 @@ html, body {
     place-items: center;
 }
 
-#root {
-    border: 1px solid yellow;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    place-items: center;
-}
-
-#container {
-    border: 1px solid beige;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 768px;
-    width: 1366px;
-    margin: 0;
-    padding: 0;
-    place-items: center;
-    justify-content: center;
-    align-items: center;
-}
 
 .konvajs-content {
-    border: 1px solid green;
-    margin: 0;
+    border: 1px double rgb(255, 0, 149);
+    margin: 15px;
     padding: 0;
 }

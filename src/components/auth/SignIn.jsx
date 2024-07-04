@@ -37,9 +37,9 @@ export default function SignIn() {
     return (
     <>
     <div className="signin-div">
-            <h1>
+            <h2>
                 Log In
-            </h1>
+            </h2>
         <form onSubmit={authUser}>
 
             <input 
