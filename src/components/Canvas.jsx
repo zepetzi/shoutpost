@@ -2,20 +2,22 @@ import { useRef, useState } from 'react';
 import { auth } from '../firebase';
 import { Stage, Layer, Image } from 'react-konva';
 import './Canvas.css' 
-// import useImage from 'use-image';
+import useImage from 'use-image';
 
 
 
 export default function Canvas(){
 
+    // const testURL = URL.createObjectURL('../../public/vite.svg')
+    const [testImage] = useImage('../../public/vite.svg'); 
+
     return(
     <>
     <div id='container'>
-        <Stage width={1600} height={900}>
-            {/* <Layer>
-                const [image] = useImage('../../../../../../Desktop/shoutpost.jpg');
-                <Image image={''}></Image>
-            </Layer> */}
+        <Stage width={1366} height={768}>
+            <Layer>
+                <Image image={testImage}></Image>
+            </Layer>
         </Stage>
     </div>    
     </>

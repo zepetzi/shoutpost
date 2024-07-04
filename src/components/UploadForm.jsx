@@ -22,7 +22,7 @@ export default function UploadForm() {
         <>
         <input type="file" onChange={uploadImage}/>
         <button onClick={handleButtonClick}>Upload</button>
-        <img src={image}></img>
+        {/* <img src={image}></img> */}
         </>
     )
 };
