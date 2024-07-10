@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { auth } from '../firebase';
 import { Stage, Layer, Image } from 'react-konva';
-import './Canvas.css' 
+// import './Canvas.css' 
 import useImage from 'use-image';
 
 
@@ -14,7 +14,7 @@ export default function Canvas(){
     return(
     <>
         
-        <Stage width={1470} height={870}>
+        <Stage width={1470} height={770}>
             <Layer>
                 <Image image={testImage}></Image>
             </Layer>

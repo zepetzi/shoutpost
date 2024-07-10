@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { v4 as uuid }  from 'uuid' ;
 import './App.css';
+import './index.css';
 import SignIn from './components/auth/SignIn';
 
 
