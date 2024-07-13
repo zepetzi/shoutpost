@@ -7,7 +7,7 @@ const AuthContext = createContext()
 
 //doing useContext(Whatever context) means you want to use that context in the component you type it in
 //"packaging" it as useAuth here means we can import useAuth into other components to use the states/state functions
-export default function useAuth() {
+export function useAuth() {
     return useContext(AuthContext)
 } 
 
@@ -37,6 +37,9 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
+        //pass currentUser so that you can check it anytime for signed in or not
+        //to get these values anywhere, you have to import useAuth,
+        //and then destruct these values as return values from calling useAuth
         <AuthContext.Provider value={{ signIn, currentUser }}>
             { children }
         </AuthContext.Provider>
