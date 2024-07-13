@@ -22,9 +22,15 @@ export default function UploadForm() {
                 const selectedFileURL = URL.createObjectURL(selectedFile);
 
                 try{
-
-                    const uploadedImgPostRef = await ref(storage, `post_images/${uuid()}.jpg`);
+                    
+                    const newImgFileName = uuid()
+                    const uploadedImgPostRef = await ref(storage, `post_images/${newImgFileName}.jpg`);
                     uploadBytes(uploadedImgPostRef, selectedFile);
+                    window.alert(`img uploaded! file#: ${newImgFileName}.jpg/png`)
+                    
+
+
+
 
                 } catch (error) {
                     window.alert(error);        

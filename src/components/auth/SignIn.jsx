@@ -26,10 +26,11 @@ export default function SignIn() {
             if (userCredential) {
                 //signed in
                 const user = userCredential.user;
-                alert(`${user} signed In`);
+                window.alert(`${user} signed In`);
                 navigate('/canvas');
             }
         } catch (error) {
+            window.alert(error);
             console.error(error);
         }
     }
