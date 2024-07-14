@@ -8,17 +8,22 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import UserPage from './pages/ProfilePage.jsx';
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AuthProvider } from './components/contexts/AuthContext';
+import { AuthProvider, useAuth } from './components/contexts/AuthContext';
+import LoginRedirect from './components/LoginRedirect.jsx';
 
 
 const router = createBrowserRouter([
+  
   {
     path: '/',
     element: <App />,
   },
   {
     path: '/signin',
-    element: <SignInPage/>,
+    element:
+      <LoginRedirect>
+          <SignInPage />
+      </LoginRedirect>,
   },
   {
     path: '/profile',

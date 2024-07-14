@@ -38,7 +38,7 @@ export default function SignInForm() {
     
     useEffect( () => {
         if (currentUser) {
-            window.alert(`${currentUser} signed In`);
+            // window.alert(`${currentUser} signed In`);
             navigate('/profile');
         }
     },[currentUser, navigate]);
