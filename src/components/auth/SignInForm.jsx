@@ -1,11 +1,17 @@
-import { React, useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './../../firebase';
+import { React, useState, useEffect } from 'react';
+import { signOut } from 'firebase/auth';
+// import { auth } from '../../firebase';
+import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from 'react-router-dom'; 
+import { auth } from '../../firebase';
 
-export default function SignIn() {
+
+
+export default function SignInForm() {
 
     const navigate = useNavigate();
+
+    const { signIn, currentUser } = useAuth()
 
     const [signInData, setSignIn] = useState({email:"", password:""});
 
@@ -22,25 +28,42 @@ export default function SignIn() {
     const authUser = async (evt) => {
         evt.preventDefault();
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, signInData.email, signInData.password);
-            if (userCredential) {
-                //signed in
-                const user = userCredential.user;
-                window.alert(`${user} signed In`);
-                navigate('/canvas');
-            }
+            await signIn(signInData.email, signInData.password);
+            
         } catch (error) {
             window.alert(error);
             console.error(error);
         }
     }
     
+    useEffect( () => {
+        if (currentUser) {
+            window.alert(`${currentUser} signed In`);
+            navigate('/profile');
+        }
+    },[currentUser, navigate]);
+    
+
+    const handleSignOut = async (evt) => {
+        evt.preventDefault();
+        try {
+            signOut(auth);
+            window.alert(`${currentUser} signed out`);
+
+        } catch (error) {
+            window.alert(error);
+            console.error(error);
+        }
+    }
+
+
+
     return (
     <>
     <div className="signin-div">
-            <h2>
+            <h1>
                 Log In
-            </h2>
+            </h1>
         <form onSubmit={authUser}>
 
             <input 
@@ -59,10 +82,11 @@ export default function SignIn() {
                 name='password'
             />
 
-            <button type="submit">Sign In</button>
-
-            <p>{<>Logged In</>}</p>
+            <button type="submit">Sign In</button> 
+        
+            <p>{currentUser ? <>Logged In</> : <>Logged Out</>}</p>
         </form>    
+        <button type="submit" onClick={handleSignOut}>Log Out</button>
     </div>
     </>
     )    

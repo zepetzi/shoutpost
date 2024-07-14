@@ -35,9 +35,6 @@ export default function UploadForm() {
                         window.alert('not signed in');
                     }
 
-
-
-
                 } catch (error) {
                     window.alert(error);        
                 }
