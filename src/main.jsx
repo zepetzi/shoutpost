@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import CanvasPage from './pages/CanvasPage';
-import SignIn from './components/auth/SignInForm.jsx';
-import SignInPage from './pages/SignInPage.jsx';
+import SignIn from './components/auth/LogInForm.jsx';
+import SignInPage from './pages/LogInPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import UserPage from './pages/ProfilePage.jsx';
 import './index.css'
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/signin',
+    path: '/login',
     element:
       <LoginRedirect>
           <SignInPage />

@@ -1,36 +1,72 @@
 import { useRef, useState } from 'react';
-import { auth, storageRef, storage } from '../firebase';
+import { auth, storageRef, storage, functions } from '../firebase'; //firebase.js file
 import { v4 as uuid} from "uuid" 
 import { uploadBytes, ref } from "firebase/storage";
 import { useAuth } from "./contexts/AuthContext";
+import { signOut } from 'firebase/auth';
+import { httpsCallable } from 'firebase/functions';
 
 
 
-export default function UploadForm() {
+export default function UploadForm({ canvasID }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
-
     const { signIn, currentUser } = useAuth()
+
+    const metagen = httpsCallable(functions, 'metagen');
 
     const handleSelectFile = (evt) => {
         const addedFile = evt.target.files[0] 
         setSelectedFile(addedFile)
     };
 
+    const handleSignOut = async (evt) => {
+        evt.preventDefault();
+        try {
+            signOut(auth);
+            window.alert(`${currentUser} signed out`);
+
+        } catch (error) {
+            window.alert(error);
+            console.error(error);
+        }
+    }
+
     const handleButtonClick = async () => {
         
         if (selectedFile) {
             try {
-                //make file URL for image preview
+                //make file URL for image preview later
                 const selectedFileURL = URL.createObjectURL(selectedFile);
 
                 try{
                     
                     if (currentUser) {
                         const newImgFileName = uuid()
+
+                        //reference is like a pointer to a location including the name of the file, like a explorer address
                         const uploadedImgPostRef = await ref(storage, `post_images/${newImgFileName}.jpg`);
+
+                        //uplaods using a reference and the state 
                         uploadBytes(uploadedImgPostRef, selectedFile);
                         window.alert(`img uploaded! file#: ${newImgFileName}.jpg/png`)
+
+                        //extract some data with sharp
+                        const metadata = await sharp(selectedFile).metadata();
+
+
+                        const data = {
+                            uploadedBy: currentUser.uid,
+                            imageName: `${newImgFileName}.jpg`,
+                            imageThumb: `${newImgFileName}_200x200.jpg`,
+                            imageWidth: metadata.width,
+                            imageHeight: metadata.height,
+                            canvasID: canvasID
+                        }
+
+                        const result = metagen(data);
+                            
+
                     } else {
                         window.alert('not signed in');
                     }
@@ -52,6 +88,8 @@ export default function UploadForm() {
         <>
         <input type="file" onChange={handleSelectFile}/>
         <button onClick={handleButtonClick}>Upload</button>
+        <button type="submit" onClick={handleSignOut}>Log Out</button>
         </>
+
     )
 };

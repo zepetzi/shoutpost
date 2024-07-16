@@ -11,6 +11,8 @@ import '../index.css';
 
 export default function CanvasPage() {
 
+    const canvasID = "123";
+
     return(
         <>
         <div id='full-container'className="border-solid border border-rose-500"> Full
@@ -28,7 +30,7 @@ export default function CanvasPage() {
                 <div id='canv-container'>
                     <Canvas></Canvas>
                         <div id='upload-form'>
-                            <UploadForm></UploadForm>
+                            <UploadForm canvasID={canvasID} />
                         </div>
                 </div>
                 

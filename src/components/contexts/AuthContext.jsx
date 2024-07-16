@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     //use useEffect so that the first time AuthContext is rendered,
     //a listener is added to auth to monitor if the user is signed in.
-    //OASC returns an unsub function, that is returned within useEffect
+    //OASC returns an unsub function, and that is returned within useEffect
     //which also returns it.
     useEffect(() => {
         const unsubscribeFunc = onAuthStateChanged(auth, (user) => {

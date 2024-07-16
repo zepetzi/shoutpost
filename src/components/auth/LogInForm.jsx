@@ -7,14 +7,14 @@ import { auth } from '../../firebase';
 
 
 
-export default function SignInForm() {
+export default function LogInForm() {
 
     const navigate = useNavigate();
 
     const { signIn, currentUser } = useAuth()
 
     const [signInData, setSignIn] = useState({email:"", password:""});
-
+ 
     const formHandle = (evt) => {
         const newName = evt.target.name
         const newValue = evt.target.value
