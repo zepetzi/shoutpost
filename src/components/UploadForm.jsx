@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import { auth, storageRef, storage, functions } from '../firebase'; //firebase.js file
+import { auth, imgStorage, imgStorageRef, functions } from '../firebase'; //firebase.js file
 import { v4 as uuid} from "uuid" 
 import { uploadBytes, ref } from "firebase/storage";
 import { useAuth } from "./contexts/AuthContext";
 import { signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
+// import { imgmetagen } from '../../functions/src/imageMetaGen';
 
 
 
@@ -13,7 +14,7 @@ export default function UploadForm({ canvasID }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const { signIn, currentUser } = useAuth()
 
-    const metagen = httpsCallable(functions, 'metagen');
+    const imgmetagen = httpsCallable(functions, 'imgmetagen');
 
     const handleSelectFile = (evt) => {
         const addedFile = evt.target.files[0] 
@@ -45,7 +46,7 @@ export default function UploadForm({ canvasID }) {
                         const newImgFileName = uuid()
 
                         //reference is like a pointer to a location including the name of the file, like a explorer address
-                        const uploadedImgPostRef = await ref(storage, `post_images/${newImgFileName}.jpg`);
+                        const uploadedImgPostRef = await ref(imgStorage, `post_images/${newImgFileName}.jpg`);
 
                         //uplaods using a reference and the state 
                         uploadBytes(uploadedImgPostRef, selectedFile);
@@ -57,6 +58,8 @@ export default function UploadForm({ canvasID }) {
 
                         const data = {
                             uploadedBy: currentUser.uid,
+                            imageRef: uploadedImgPostRef,
+                            imageID: newImgFileName,
                             imageName: `${newImgFileName}.jpg`,
                             imageThumb: `${newImgFileName}_200x200.jpg`,
                             imageWidth: metadata.width,
@@ -64,7 +67,7 @@ export default function UploadForm({ canvasID }) {
                             canvasID: canvasID
                         }
 
-                        const result = metagen(data);
+                        const result = imgmetagen(data);
                             
 
                     } else {
