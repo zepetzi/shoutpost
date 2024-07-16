@@ -46,7 +46,7 @@ export default function UploadForm({ canvasID }) {
                         const newImgFileName = uuid()
 
                         //reference is like a pointer to a location including the name of the file, like a explorer address
-                        const uploadedImgPostRef = await ref(imgStorage, `post_images/${newImgFileName}.jpg`);
+                        const uploadedImgPostRef = await ref(imgStorage, `${newImgFileName}.jpg`);
 
                         //uplaods using a reference and the state 
                         uploadBytes(uploadedImgPostRef, selectedFile);
@@ -61,7 +61,7 @@ export default function UploadForm({ canvasID }) {
                             imageRef: uploadedImgPostRef,
                             imageID: newImgFileName,
                             imageName: `${newImgFileName}.jpg`,
-                            imageThumb: `${newImgFileName}_200x200.jpg`,
+                            imageThumbName: `${newImgFileName}_thumb.jpg`,
                             imageWidth: metadata.width,
                             imageHeight: metadata.height,
                             canvasID: canvasID

@@ -11,7 +11,7 @@ exports.imgmetagen = onCall((request) => {
     const imageID = request.data.imageID
     const imageRef = request.data.imageRef 
     const imageName = request.data.imageName
-    const imageThumb = request.data.imageThumb
+    const imageThumbName = request.data.imageThumb
     const imageWidth = request.data.imageWidth
     const imageHeight = request.data.imageHeight
     const canvasID = request.data.canvasID
@@ -24,6 +24,9 @@ exports.imgmetagen = onCall((request) => {
         height:imageHeight,
         user_id:uploadedBy
     })
+
+
+
 
 
 });
