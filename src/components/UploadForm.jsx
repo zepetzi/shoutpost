@@ -5,6 +5,7 @@ import { uploadBytes, ref } from "firebase/storage";
 import { useAuth } from "./contexts/AuthContext";
 import { signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
+import  sharp  from 'sharp';
 // import { imgmetagen } from '../../functions/src/imageMetaGen';
 
 
@@ -33,6 +34,9 @@ export default function UploadForm({ canvasID }) {
         }
     }
 
+//--------------------- need remake since sharp needs to be on server side
+
+
     const handleButtonClick = async () => {
         
         if (selectedFile) {
@@ -45,29 +49,43 @@ export default function UploadForm({ canvasID }) {
                     if (currentUser) {
                         const newImgFileName = uuid()
 
-                        //reference is like a pointer to a location including the name of the file, like a explorer address
-                        const uploadedImgPostRef = await ref(imgStorage, `${newImgFileName}.jpg`);
-
-                        //uplaods using a reference and the state 
-                        uploadBytes(uploadedImgPostRef, selectedFile);
-                        window.alert(`img uploaded! file#: ${newImgFileName}.jpg/png`)
-
-                        //extract some data with sharp
+                        //extract some data on img with sharp
                         const metadata = await sharp(selectedFile).metadata();
 
+                        const fullImageName =`${newImgFileName}.${metadata.format}`
+
+                        //reference is like a pointer to a location including the name of the file, like a explorer address
+                        const uploadedImgRef = ref(imgStorage, fullImageName);
+                        
+                        //uploads using a reference and the state 
+                        uploadBytes(uploadedImgRef, selectedFile);
+                        window.alert(`img uploaded! file#: ${fullImageName}`)
+
+                        //use sharp to resize and make thumbnail
+                        const createdThumb = await sharp(selectedFile).resize(200,200, {fit: 'outside'}).toBuffer()
+
+                        //takes that same image and its ref to make a thumbnail in the thumb bucket
+                        const fullThumbName = `${newImgFileName}_200x200.${metadata.format}`
+                        const uploadedThumbRef = ref(thumbStorage, fullThumbName);
+
+                        //upload thumbnail
+                        uploadBytes(uploadedThumbRef, createdThumb);
+                        window.alert(`thumb uploaded! file#: ${fullThumbName}`)
 
                         const data = {
                             uploadedBy: currentUser.uid,
-                            imageRef: uploadedImgPostRef,
+                            imageRef: uploadedImgRef,
+                            thumbRef: uploadedThumbRef,
                             imageID: newImgFileName,
-                            imageName: `${newImgFileName}.jpg`,
-                            imageThumbName: `${newImgFileName}_thumb.jpg`,
+                            imageName: fullImageName,
+                            imageThumbName: fullThumbName,
                             imageWidth: metadata.width,
                             imageHeight: metadata.height,
                             canvasID: canvasID
                         }
 
-                        const result = imgmetagen(data);
+
+                        // const result = imgmetagen(data);
                             
 
                     } else {

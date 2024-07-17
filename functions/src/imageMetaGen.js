@@ -10,6 +10,7 @@ exports.imgmetagen = onCall((request) => {
     const uploadedBy  = request.data.uploadedBy
     const imageID = request.data.imageID
     const imageRef = request.data.imageRef 
+    const thumbRef = request.data.thumbRef
     const imageName = request.data.imageName
     const imageThumbName = request.data.imageThumb
     const imageWidth = request.data.imageWidth
@@ -20,6 +21,7 @@ exports.imgmetagen = onCall((request) => {
     setDoc(doc(fsdb, "images", ), {
         image_ID:imageID,
         image_ref:imageRef,
+        thumb_ref: thumbRef,
         width:imageWidth,
         height:imageHeight,
         user_id:uploadedBy

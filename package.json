@@ -16,6 +16,7 @@
     "react-dom": "^18.3.1",
     "react-konva": "^18.2.10",
     "react-router-dom": "^6.24.0",
+    "sharp": "^0.33.4",
     "use-image": "^1.1.1",
     "uuid": "^10.0.0"
   },
@@ -31,5 +32,11 @@
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.4",
     "vite": "^5.3.1"
+  },
+  "pnpm": {
+    "supportedArchitectures": {
+      "os": ["win32", "darwin", "current"],
+      "cpu": ["x64", "arm64"]
+    }
   }
 }
