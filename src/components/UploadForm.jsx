@@ -16,6 +16,7 @@ export default function UploadForm({ canvasID }) {
     const { signIn, currentUser } = useAuth()
 
     const imgmetagen = httpsCallable(functions, 'imgmetagen');
+    const thumbnailgen = httpsCallable(functions, 'thumbnailgen');
 
     const handleSelectFile = (evt) => {
         const addedFile = evt.target.files[0] 
@@ -34,7 +35,6 @@ export default function UploadForm({ canvasID }) {
         }
     }
 
-//--------------------- need remake since sharp needs to be on server side
 
 
     const handleButtonClick = async () => {
@@ -44,37 +44,39 @@ export default function UploadForm({ canvasID }) {
                 //make file URL for image preview later
                 const selectedFileURL = URL.createObjectURL(selectedFile);
 
+                
+
                 try{
                     
                     if (currentUser) {
+                        //get file type
+                        const imageType = selectedFile.type.split('/')[1];
+                        
                         const newImgFileName = uuid()
 
                         //extract some data on img with sharp
                         const metadata = await sharp(selectedFile).metadata();
+                        
 
-                        const fullImageName =`${newImgFileName}.${metadata.format}`
+                        const fullImageName =`${newImgFileName}.${imageType}`
 
                         //reference is like a pointer to a location including the name of the file, like a explorer address
                         const uploadedImgRef = ref(imgStorage, fullImageName);
                         
                         //uploads using a reference and the state 
-                        uploadBytes(uploadedImgRef, selectedFile);
+                        await uploadBytes(uploadedImgRef, selectedFile);
                         window.alert(`img uploaded! file#: ${fullImageName}`)
 
-                        //use sharp to resize and make thumbnail
-                        const createdThumb = await sharp(selectedFile).resize(200,200, {fit: 'outside'}).toBuffer()
+                        //send ref to that image to thumbnail generator cloud function
+                        const thumbData = {
+                            imageRef: uploadedImgRef, 
+                            fullThumbName: `${newImgFileName}_200x200.${imageType}`
+                        }
+                        
+                        await thumbnailgen(uploadedImgRef)
 
-                        //takes that same image and its ref to make a thumbnail in the thumb bucket
-                        const fullThumbName = `${newImgFileName}_200x200.${metadata.format}`
-                        const uploadedThumbRef = ref(thumbStorage, fullThumbName);
-
-                        //upload thumbnail
-                        uploadBytes(uploadedThumbRef, createdThumb);
-                        window.alert(`thumb uploaded! file#: ${fullThumbName}`)
-
-                        const data = {
+                        const imgData = {...thumbData,
                             uploadedBy: currentUser.uid,
-                            imageRef: uploadedImgRef,
                             thumbRef: uploadedThumbRef,
                             imageID: newImgFileName,
                             imageName: fullImageName,
@@ -84,8 +86,7 @@ export default function UploadForm({ canvasID }) {
                             canvasID: canvasID
                         }
 
-
-                        // const result = imgmetagen(data);
+                        const result = imgmetagen(imgData);
                             
 
                     } else {
@@ -107,7 +108,7 @@ export default function UploadForm({ canvasID }) {
 
     return (
         <>
-        <input type="file" onChange={handleSelectFile}/>
+        <input type="file" onChange={handleSelectFile} accept="image/*"/>
         <button onClick={handleButtonClick}>Upload</button>
         <button type="submit" onClick={handleSignOut}>Log Out</button>
         </>

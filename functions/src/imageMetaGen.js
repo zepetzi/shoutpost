@@ -19,12 +19,12 @@ exports.imgmetagen = onCall((request) => {
 
 
     setDoc(doc(fsdb, "images", ), {
-        image_ID:imageID,
-        image_ref:imageRef,
+        image_ID: imageID,
+        image_ref: imageRef,
         thumb_ref: thumbRef,
-        width:imageWidth,
-        height:imageHeight,
-        user_id:uploadedBy
+        width: imageWidth,
+        height: imageHeight,
+        user_id: uploadedBy
     })
 
 

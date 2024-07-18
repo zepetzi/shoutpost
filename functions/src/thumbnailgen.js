@@ -1,10 +1,25 @@
 const { fsdb, imgStorage, imgStorageRef, thumbStorage, thumbStorageRef, pfpStorage, pfpStorageRef, logger, path, onObjectFinalized, sharp } = require("./firebase-admin");
+const { getStream } = require('firebase-admin/storage')
 const { v4: uuid } = require('uuid'); 
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 
-exports.thumbnailgen = onCall((request) => {
+exports.thumbnailgen = onCall( async(request) => {
 
+    const mainImageRef = request.data.imageRef;
+    const fullThumbName = request.data.fullthumbName;
     
-    //placeholder for thumbnail generator if needed
+    imageStream = getStream(mainImageRef);
 
+    //use sharp to resize and make thumbnail
+    const createdThumb = await sharp(imageStream).resize(200,200, {fit: 'outside'}).toBuffer();
+
+    //takes that same image and its ref to make a thumbnail in the thumb bucket
+    const uploadedThumbRef = ref(thumbStorage, fullThumbName);
+
+    //upload thumbnail
+    await uploadBytes(uploadedThumbRef, createdThumb);
+    console.log(`thumb uploaded! file#: ${fullThumbName}`);
+
+    return uploadedThumbRef;
+    
 });
