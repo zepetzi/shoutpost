@@ -5,7 +5,6 @@ import { uploadBytes, ref } from "firebase/storage";
 import { useAuth } from "./contexts/AuthContext";
 import { signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
-import  sharp  from 'sharp';
 // import { imgmetagen } from '../../functions/src/imageMetaGen';
 
 
@@ -15,7 +14,7 @@ export default function UploadForm({ canvasID }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const { signIn, currentUser } = useAuth()
 
-    const imgmetagen = httpsCallable(functions, 'imgmetagen');
+    // const imgmetagen = httpsCallable(functions, 'imgmetagen');
     const thumbnailgen = httpsCallable(functions, 'thumbnailgen');
 
     const handleSelectFile = (evt) => {
@@ -44,8 +43,6 @@ export default function UploadForm({ canvasID }) {
                 //make file URL for image preview later
                 const selectedFileURL = URL.createObjectURL(selectedFile);
 
-                
-
                 try{
                     
                     if (currentUser) {
@@ -55,7 +52,7 @@ export default function UploadForm({ canvasID }) {
                         const newImgFileName = uuid()
 
                         //extract some data on img with sharp
-                        const metadata = await sharp(selectedFile).metadata();
+                        // const metadata = await sharp(selectedFile).metadata();
                         
 
                         const fullImageName =`${newImgFileName}.${imageType}`
@@ -86,7 +83,7 @@ export default function UploadForm({ canvasID }) {
                             canvasID: canvasID
                         }
 
-                        const result = imgmetagen(imgData);
+                        // const result = imgmetagen(imgData);
                             
 
                     } else {
