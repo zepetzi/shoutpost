@@ -49,37 +49,47 @@ export default function UploadForm({ canvasID }) {
                         //get file type
                         const imageType = selectedFile.type.split('/')[1];
                         
-                        const newImgFileName = uuid()
+                        const newImgID = uuid()
 
                         //extract some data on img with sharp
                         // const metadata = await sharp(selectedFile).metadata();
                         
 
-                        const fullImageName =`${newImgFileName}.${imageType}`
+                        const imageName =`${newImgID}.${imageType}`
 
                         //reference is like a pointer to a location including the name of the file, like a explorer address
-                        const uploadedImgRef = ref(imgStorage, fullImageName);
+
+                        //    storageRef     = ref(firebase Storage Instance, path or imagename)
+                        const uploadedImgRef = ref(imgStorage, imageName);
+
+                        console.log(`${uploadedImgRef.bucket} - client`);
+                        console.log(`${imageName} - client`);
+                        console.log(`${uploadedImgRef.fullPath} - client`);
                         
                         //uploads using a reference and the state 
                         await uploadBytes(uploadedImgRef, selectedFile);
-                        window.alert(`img uploaded! file#: ${fullImageName}`)
+                        window.alert(`img uploaded! file#: ${imageName}`)
 
-                        //send ref to that image to thumbnail generator cloud function
-                        const thumbData = {
-                            imageRef: uploadedImgRef, 
-                            fullThumbName: `${newImgFileName}_200x200.${imageType}`
+                        //disassemble the image ref into an object and send to thumbnail generator cloud function
+                        const disassembledImgRef = {
+                            bucketName: uploadedImgRef.bucket,
+                            imageName: imageName,
+                            imageRef: uploadedImgRef.fullPath, 
+                            thumbName: `${newImgID}_200x200.${imageType}`
                         }
                         
-                        await thumbnailgen(uploadedImgRef)
+                        // const uploadedThumbRef = await thumbnailgen(uploadedImgRef);
+                        const uploadedThumbRef = await thumbnailgen(disassembledImgRef);
+                        window.alert(`cloud function completed`)
 
-                        const imgData = {...thumbData,
+                        
+                        const imgData = {
                             uploadedBy: currentUser.uid,
                             thumbRef: uploadedThumbRef,
-                            imageID: newImgFileName,
-                            imageName: fullImageName,
-                            imageThumbName: fullThumbName,
-                            imageWidth: metadata.width,
-                            imageHeight: metadata.height,
+                            imageID: newImgID,
+                            imageName: imageName,
+                            // imageWidth: metadata.width,
+                            // imageHeight: metadata.height,
                             canvasID: canvasID
                         }
 
