@@ -51,30 +51,17 @@ export default function UploadForm({ canvasID }) {
                         
                         const newImgID = uuid()
 
-                        //extract some data on img with sharp
-                        // const metadata = await sharp(selectedFile).metadata();
-                        
-
                         const imageName =`${newImgID}.${imageType}`
 
-                        //reference is like a pointer to a location including the name of the file, like a explorer address
-
-                        //    storageRef     = ref(firebase Storage Instance, path or imagename)
                         const uploadedImgRef = ref(imgStorage, imageName);
 
-                        console.log(`${uploadedImgRef.bucket} - client`);
-                        console.log(`${imageName} - client`);
-                        console.log(`${uploadedImgRef.fullPath} - client`);
-                        
                         //uploads using a reference and the state 
                         await uploadBytes(uploadedImgRef, selectedFile);
                         window.alert(`img uploaded! file#: ${imageName}`)
 
                         //disassemble the image ref into an object and send to thumbnail generator cloud function
                         const disassembledImgRef = {
-                            bucketName: uploadedImgRef.bucket,
                             imageName: imageName,
-                            imageRef: uploadedImgRef.fullPath, 
                             thumbName: `${newImgID}_200x200.${imageType}`
                         }
                         
@@ -88,8 +75,6 @@ export default function UploadForm({ canvasID }) {
                             thumbRef: uploadedThumbRef,
                             imageID: newImgID,
                             imageName: imageName,
-                            // imageWidth: metadata.width,
-                            // imageHeight: metadata.height,
                             canvasID: canvasID
                         }
 

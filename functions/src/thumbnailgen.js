@@ -1,24 +1,50 @@
-// const { app, fsdb, imgStorage, imgStorageRef, thumbStorage, thumbStorageRef, pfpStorage, pfpStorageRef, logger, path, onObjectFinalized, sharp } = require("./firebase-admin");
-// const { getStream } = require('firebase-admin/storage')
-// const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const  sharp  = require('sharp');
 
-// exports.thumbnailgen = onCall(async(request) => {
+const { imgStorage } = require('./firebase-admin');
 
-//     const mainImageRef = request.data.imageRef;
-//     const fullThumbName = request.data.fullthumbName;
+const thumbnailgen = onCall(async(request) => {
+
+    try {
+        
+        //get data from incoming request parameter
+        const { thumbName, imageName } = request.data;
+
+        //get image reference to original image
+        const uploadedImgRef = imgStorage.bucket().file(imageName);
+        
+        //download the file
+        //get the first index which is a buffered version of the file
+        const [bufferedImg] = await uploadedImgRef.download();
+
+        console.log("Downloaded image: ", imageName)
+
+        //use sharp to get metadata
+        const metadata = await sharp(bufferedImg).metadata();
+
+        console.log("Retrieved metadata: ", metadata)
+
+        //and then resize and make thumbnail
+        const createdThumb = await sharp(bufferedImg).resize(200,200, {fit: 'outside'}).toBuffer();
+        
+        console.log("Thumbnail created.")
+
+        //get reference the thumb bucket
+        const thumbStorage = imgStorage.bucket('post_thumbs')    
+        
+        //upload thumbnail
+        await thumbStorage.file(thumbName).save(createdThumb)
+
+        console.log("Thumbnail uploaded.")
+
+        return { message: 'Thumbnail created and uploaded successfully' };
     
-//     imageStream = getStream(mainImageRef);
+    } catch (error) {
+        console.error('Error in thumbnail generation:', error);
+        throw new HttpsError(error.message);
+    }
+    
 
-//     //use sharp to resize and make thumbnail
-//     const createdThumb = await sharp(imageStream).resize(200,200, {fit: 'outside'}).toBuffer();
+});
 
-//     //takes that same image and its ref to make a thumbnail in the thumb bucket
-//     const uploadedThumbRef = ref(thumbStorage, fullThumbName);
-
-//     //upload thumbnail
-//     await uploadBytes(uploadedThumbRef, createdThumb);
-//     console.log(`thumb uploaded! file#: ${fullThumbName}`);
-
-//     return uploadedThumbRef;
-
-// });
+module.exports = { thumbnailgen };
