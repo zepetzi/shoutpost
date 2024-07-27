@@ -1,35 +1,42 @@
-const {onObjectFinalized} = require("firebase-functions/v2/storage");
-const { app, fsdb, imgStorage, imgStorageRef, thumbStorage, thumbStorageRef, pfpStorage, pfpStorageRef } = require("./firebase-admin");
+const { onObjectFinalized } = require("firebase-functions/v2/storage");
+const { app, fsdb, imgStorage } = require("./firebase-admin");
 const { v4: uuid } = require('uuid'); 
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { logger } = require("firebase-functions/v2");
 const { doc, setDoc } = require("firebase/firestore"); 
 
-exports.imgmetagen = onCall((request) => {
+exports.imagemetagen = onCall((request) => {
 
-    const uploadedBy  = request.data.uploadedBy
-    const imageID = request.data.imageID
-    const imageRef = request.data.imageRef 
-    const thumbRef = request.data.thumbRef
-    const imageName = request.data.imageName
-    const imageThumbName = request.data.imageThumb
-    const imageWidth = request.data.imageWidth
-    const imageHeight = request.data.imageHeight
-    const canvasID = request.data.canvasID
+    try {
+    
+        const { uploadedBy, imageName, thumbName, imageWidth, imageHeight } = request.data;
+        if (!uploadedBy || !imageName || !thumbName || !imageWidth || !imageHeight) {
+            throw new HttpsError('invalid metadata', 'one or more fields are invalid')
+        }
 
+        setDoc(doc(fsdb, "images", imageName), {
+            user_id: uploadedBy,
+            image_name: imageName,
+            thumb_name: thumbName,
+            width: imageWidth,
+            height: imageHeight,
+        })
 
-    setDoc(doc(fsdb, "images", ), {
-        image_ID: imageID,
-        image_ref: imageRef,
-        thumb_ref: thumbRef,
-        width: imageWidth,
-        height: imageHeight,
-        user_id: uploadedBy
-    })
+        return {
+            status: 'success',
+            message: 'img metadata created and uploaded successfully'
+            };
 
+    } catch(error) {
 
-
-
+        console.error('Error in metadata upload:', error);
+        if (error instanceof HttpsError) {
+            throw error;
+        } else {
+            throw new HttpsError('internal', 'image metadata generation failed', { originalError: error.message });
+        }
+    }
 
 });
 
+module.exports = { imagemetagen };

@@ -5,7 +5,6 @@ import { uploadBytes, ref } from "firebase/storage";
 import { useAuth } from "./contexts/AuthContext";
 import { signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
-// import { imgmetagen } from '../../functions/src/imageMetaGen';
 
 
 const THUMB_SUFFIX = '_thumb';
@@ -17,7 +16,7 @@ export default function UploadForm({ canvasID }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const { signIn, currentUser } = useAuth()
 
-    // const imgmetagen = httpsCallable(functions, 'imgmetagen');
+    const imagemetagen = httpsCallable(functions, 'imagemetagen');
     const thumbnailgen = httpsCallable(functions, 'thumbnailgen');
 
     const handleSelectFile = (evt) => {
@@ -77,12 +76,12 @@ export default function UploadForm({ canvasID }) {
                             uploadedBy: currentUser.uid,
                             imageName: imageName,
                             thumbName: disassembledImgRef.thumbName,
-                            imgWidth: returnedstatus.data.width,
-                            imgHeight: returnedstatus.data.height
+                            imageWidth: returnedstatus.data.width,
+                            imageHeight: returnedstatus.data.height
                         }
 
-                        const result = await imgmetagen(imgmetadata);
-                            
+                        const result = await imagemetagen(imgmetadata);
+                        
 
                     } else {
                         window.alert('not signed in');

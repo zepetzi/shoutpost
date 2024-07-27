@@ -55,8 +55,9 @@
 
 
 const { thumbnailgen } = require('./src/thumbnailgen');
-
+const { imagemetagen } = requre('./src/imagemetagen')
 
 module.exports = {
     thumbnailgen,
+    imagemetagen 
 };
