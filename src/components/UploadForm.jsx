@@ -8,6 +8,9 @@ import { httpsCallable } from 'firebase/functions';
 // import { imgmetagen } from '../../functions/src/imageMetaGen';
 
 
+const THUMB_SUFFIX = '_thumb';
+const TEST_CANVAS = 'eb86254b-cfc9-4b20-9b21-21b8af518b58';
+
 
 export default function UploadForm({ canvasID }) {
 
@@ -33,7 +36,6 @@ export default function UploadForm({ canvasID }) {
             console.error(error);
         }
     }
-
 
 
     const handleButtonClick = async () => {
@@ -62,23 +64,24 @@ export default function UploadForm({ canvasID }) {
                         //disassemble the image ref into an object and send to thumbnail generator cloud function
                         const disassembledImgRef = {
                             imageName: imageName,
-                            thumbName: `${newImgID}_200x200.${imageType}`
+                            thumbName: `${newImgID}${THUMB_SUFFIX}.${imageType}`
                         }
                         
-                        // const uploadedThumbRef = await thumbnailgen(uploadedImgRef);
-                        const uploadedThumbRef = await thumbnailgen(disassembledImgRef);
-                        window.alert(`cloud function completed`)
-
+                        const returnedstatus = await thumbnailgen(disassembledImgRef);
+                        if (returnedstatus.status === 'success') {
+                            window.alert(`cloud function completed`)
+                        }
                         
-                        const imgData = {
+
+                        const imgmetadata = {
                             uploadedBy: currentUser.uid,
-                            thumbRef: uploadedThumbRef,
-                            imageID: newImgID,
                             imageName: imageName,
-                            canvasID: canvasID
+                            thumbName: disassembledImgRef.thumbName,
+                            imgWidth: returnedstatus.data.width,
+                            imgHeight: returnedstatus.data.height
                         }
 
-                        // const result = imgmetagen(imgData);
+                        const result = await imgmetagen(imgmetadata);
                             
 
                     } else {
