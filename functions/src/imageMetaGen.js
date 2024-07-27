@@ -1,26 +1,34 @@
 const { onObjectFinalized } = require("firebase-functions/v2/storage");
-const { app, fsdb, imgStorage } = require("./firebase-admin");
+const { getFirestore, app, fsdb } = require("./firebase-admin");
 const { v4: uuid } = require('uuid'); 
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { logger } = require("firebase-functions/v2");
-const { doc, setDoc } = require("firebase/firestore"); 
+const { doc, setDoc, } = require("firebase-admin/firestore"); 
 
-exports.imagemetagen = onCall((request) => {
+
+// fsdb = getFirestore();
+
+const imagemetagen = onCall(async (request) => {
 
     try {
+
+        console.log ("test 1 -------------------------------------------------"); 
     
         const { uploadedBy, imageName, thumbName, imageWidth, imageHeight } = request.data;
         if (!uploadedBy || !imageName || !thumbName || !imageWidth || !imageHeight) {
             throw new HttpsError('invalid metadata', 'one or more fields are invalid')
         }
 
-        setDoc(doc(fsdb, "images", imageName), {
+        const data = {
             user_id: uploadedBy,
             image_name: imageName,
             thumb_name: thumbName,
             width: imageWidth,
             height: imageHeight,
-        })
+        }
+
+        console.log ("test 2 -------------------------------------------------"); 
+        const res = await fsdb.collection('images').doc(imageName).set(data);
 
         return {
             status: 'success',

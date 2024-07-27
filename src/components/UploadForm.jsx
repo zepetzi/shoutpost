@@ -67,7 +67,7 @@ export default function UploadForm({ canvasID }) {
                         }
                         
                         const returnedstatus = await thumbnailgen(disassembledImgRef);
-                        if (returnedstatus.status === 'success') {
+                        if (returnedstatus.data.status === 'success') {
                             window.alert(`cloud function completed`)
                         }
                         
@@ -76,8 +76,8 @@ export default function UploadForm({ canvasID }) {
                             uploadedBy: currentUser.uid,
                             imageName: imageName,
                             thumbName: disassembledImgRef.thumbName,
-                            imageWidth: returnedstatus.data.width,
-                            imageHeight: returnedstatus.data.height
+                            imageWidth: returnedstatus.data.data.width,
+                            imageHeight: returnedstatus.data.data.height
                         }
 
                         const result = await imagemetagen(imgmetadata);

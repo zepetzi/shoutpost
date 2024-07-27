@@ -1,3 +1,14 @@
+
+const { thumbnailgen } = require('./src/thumbnailgen');
+const { imagemetagen } = require('./src/imagemetagen');
+
+module.exports = {
+    thumbnailgen,
+    imagemetagen 
+};
+
+
+
 // const { onCall, HttpsError } = require('firebase-functions/v2/https');
 // const  sharp  = require('sharp');
 
@@ -53,11 +64,3 @@
 
 // });
 
-
-const { thumbnailgen } = require('./src/thumbnailgen');
-const { imagemetagen } = requre('./src/imagemetagen')
-
-module.exports = {
-    thumbnailgen,
-    imagemetagen 
-};
