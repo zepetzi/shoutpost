@@ -10,6 +10,9 @@ import { httpsCallable } from 'firebase/functions';
 const THUMB_SUFFIX = '_thumb';
 const TEST_CANVAS = 'eb86254b-cfc9-4b20-9b21-21b8af518b58';
 
+//temporary globals for testing
+const canvas_id = '123123123123123'
+const canvas_depth = '20'
 
 export default function UploadForm({ canvasID }) {
 
@@ -66,11 +69,10 @@ export default function UploadForm({ canvasID }) {
                             thumbName: `${newImgID}${THUMB_SUFFIX}.${imageType}`
                         }
                         
-                        const returnedstatus = await thumbnailgen(disassembledImgRef);
-                        if (returnedstatus.data.status === 'success') {
-                            window.alert(`cloud function completed`)
+                        const thumbRes = await thumbnailgen(disassembledImgRef);
+                        if (thumbRes.data.status === 'success') {
+                            window.alert(`thumbnail cloud function completed`)
                         }
-                        
 
                         const imgmetadata = {
                             uploadedBy: currentUser.uid,
@@ -80,8 +82,15 @@ export default function UploadForm({ canvasID }) {
                             imageHeight: returnedstatus.data.data.height
                         }
 
-                        const result = await imagemetagen(imgmetadata);
+                        const metaRes = await imagemetagen(imgmetadata);
+                        if (metaRes.data.status === 'success') {
+                            window.alert(`metagen cloud function completed`)
+                        }
                         
+
+                        const postdata = {...imgmetadata,
+                            postID: metaRes.data.data.post_id, 
+                        }
 
                     } else {
                         window.alert('not signed in');

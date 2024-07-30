@@ -3,10 +3,8 @@ const { getFirestore, app, fsdb } = require("./firebase-admin");
 const { v4: uuid } = require('uuid'); 
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { logger } = require("firebase-functions/v2");
-const { doc, setDoc, } = require("firebase-admin/firestore"); 
 
 
-// fsdb = getFirestore();
 
 const imagemetagen = onCall(async (request) => {
 
@@ -25,6 +23,7 @@ const imagemetagen = onCall(async (request) => {
             thumb_name: thumbName,
             width: imageWidth,
             height: imageHeight,
+            post_id: `${uuid()}_post`
         }
 
         console.log ("test 2 -------------------------------------------------"); 
@@ -32,7 +31,8 @@ const imagemetagen = onCall(async (request) => {
 
         return {
             status: 'success',
-            message: 'img metadata created and uploaded successfully'
+            message: 'img metadata created and uploaded successfully',
+            data: { post_id: data.post_id }
             };
 
     } catch(error) {
