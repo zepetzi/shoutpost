@@ -1,10 +1,12 @@
 
 const { thumbnailgen } = require('./src/thumbnailgen');
 const { imagemetagen } = require('./src/imagemetagen');
+const { canvasgen } = require('./src/canvasgen');
 
 module.exports = {
     thumbnailgen,
-    imagemetagen 
+    imagemetagen,
+    canvasgen 
 };
 
 

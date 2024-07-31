@@ -5,6 +5,7 @@ import { uploadBytes, ref } from "firebase/storage";
 import { useAuth } from "./contexts/AuthContext";
 import { signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
+import CreateCanvas from './CreateCanvas';
 
 
 const THUMB_SUFFIX = '_thumb';
@@ -21,6 +22,7 @@ export default function UploadForm({ canvasID }) {
 
     const imagemetagen = httpsCallable(functions, 'imagemetagen');
     const thumbnailgen = httpsCallable(functions, 'thumbnailgen');
+    
 
     const handleSelectFile = (evt) => {
         const addedFile = evt.target.files[0] 
@@ -114,6 +116,7 @@ export default function UploadForm({ canvasID }) {
         <input type="file" onChange={handleSelectFile} accept="image/*"/>
         <button onClick={handleButtonClick}>Upload</button>
         <button type="submit" onClick={handleSignOut}>Log Out</button>
+        <CreateCanvas></CreateCanvas>
         </>
 
     )
