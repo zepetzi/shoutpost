@@ -24,47 +24,33 @@ export default function CreateCanvas({  }) {
     }
 
     const handleButtonClick = async () => {
-        
-        if (selectedFile) {
-            try {
 
-                try{
-                    
-                    if (currentUser) {
+        try{
+            
+            if (currentUser) {
 
-                        //download user_data, check if owns canvas already
-                        
-                        const newCanvasID = `${uuid()}_canvas`
+                //download user_data, check if owns canvas already
                 
-                        const newCanvasData = {
-                            uploadedBy: currentUser.uid,
-                            imageName: imageName,
-                            thumbName: disassembledImgRef.thumbName,
-                            imageWidth: returnedstatus.data.data.width,
-                            imageHeight: returnedstatus.data.data.height
-                        }
-
-                        const metaRes = await imagemetagen(imgmetadata);
-                        if (metaRes.data.status === 'success') {
-                            window.alert(`new canvas created`)
-                        }
-                        
-
-                    } else {
-                        window.alert('not signed in');
-                    }
-
-                } catch (error) {
-                    window.alert(error);        
+                const newCanvasID = `${uuid()}_canvas`
+        
+                const newCanvasData = {
+                    owner: currentUser.uid,
+                    canvas_id: newCanvasID,
                 }
 
-            } catch (error) {
-                window.alert(error);      
-            }
-        } else {
-            window.alert("No file selected");
-        }
+                const canvasRes = await canvasgen(newCanvasData);
+                if (canvasRes.data.status === 'success') {
+                    window.alert(`new canvas created`)
+                }
+                
 
+            } else {
+                window.alert('not signed in');
+            }
+
+        } catch (error) {
+            window.alert(error);        
+        }
     }
 
     return (
