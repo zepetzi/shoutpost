@@ -22,6 +22,7 @@ export default function UploadForm({ canvasID }) {
 
     const imagemetagen = httpsCallable(functions, 'imagemetagen');
     const thumbnailgen = httpsCallable(functions, 'thumbnailgen');
+    const postgen = httpsCallable(functions, 'postgen')
     
 
     const handleSelectFile = (evt) => {
@@ -89,10 +90,22 @@ export default function UploadForm({ canvasID }) {
                             window.alert(`metagen cloud function completed`)
                         }
                         
+                        
 
                         const postdata = {...imgmetadata,
-                            postID: metaRes.data.data.post_id, 
+                            postID: metaRes.data.data.post_id,
+                            canvasID: TEST_CANVAS,
+                            postCaption: "cool post brah",
+                            isPromoted: false,                               
                         }
+
+                        const postRes = await postgen(postdata);
+                        if (postRes.data.status === 'success') {
+                            window.alert(`postgen cloud function completed`)
+                        }
+
+
+
 
                     } else {
                         window.alert('not signed in');

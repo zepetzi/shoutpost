@@ -7,9 +7,16 @@ const { FieldValue } = require('firebase-admin/firestore');
 
 const canvasgen = onCall(async (request) => {
  
+    //data incoming to cloud function
+    const { owner, canvas_id } = request.data
+
+
     try {
+        
+        //create object for firestore
         const newCanvasData = { 
-            ...request.data,
+            owner: owner,
+            canvas_id: canvas_id,
             created_at: FieldValue.serverTimestamp(),
             current_depth: 0,
             current_posts: [],
@@ -17,8 +24,10 @@ const canvasgen = onCall(async (request) => {
             set_theme: 'None'
         }
 
+        //upload to firestore
         const res = await fsdb.collection('canvases').doc(canvas_id).set(newCanvasData);
 
+        //send success message as return to client
         return {
             status: 'success',
             message: 'canvas data created successfully',
