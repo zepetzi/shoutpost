@@ -64,7 +64,7 @@ export default function UploadForm({ canvasID }) {
 
                         //uploads using a reference and the state 
                         await uploadBytes(uploadedImgRef, selectedFile);
-                        // window.alert(`img uploaded! file#: ${imageName}`)
+                        window.alert(`img uploaded! file#: ${imageName}`)
 
                         //disassemble the image ref into an object and send to thumbnail generator cloud function
                         const disassembledImgRef = {
@@ -74,7 +74,7 @@ export default function UploadForm({ canvasID }) {
                         
                         const thumbRes = await thumbnailgen(disassembledImgRef);
                         if (thumbRes.data.status === 'success') {
-                            // window.alert(`thumbnail cloud function completed`)
+                            window.alert(`thumbnail cloud function completed`)
                         }
 
                         const imgmetadata = {
@@ -87,7 +87,7 @@ export default function UploadForm({ canvasID }) {
 
                         const metaRes = await imagemetagen(imgmetadata);
                         if (metaRes.data.status === 'success') {
-                            // window.alert(`metagen cloud function completed`)
+                            window.alert(`metagen cloud function completed`)
                         } else {
                             window.alert(`error in metagen cloud function`)
                         }
@@ -100,8 +100,6 @@ export default function UploadForm({ canvasID }) {
                             postCaption: "cool post brah",
                             isPromoted: false,                               
                         }
-
-                        console.log ("post test 0 -------------------------------------------------")
                         
                         const postRes = await postgen(postdata);
                         if (postRes.data.status === 'success') {
@@ -109,8 +107,6 @@ export default function UploadForm({ canvasID }) {
                         } else {
                             window.alert(`error in postgen cloud function`)
                         }
-
-                        console.log ("post test 5 -------------------------------------------------")
 
 
                     } else {
