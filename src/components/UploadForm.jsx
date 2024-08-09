@@ -9,7 +9,7 @@ import CreateCanvas from './CreateCanvas';
 
 
 const THUMB_SUFFIX = '_thumb';
-const TEST_CANVAS = 'eb86254b-cfc9-4b20-9b21-21b8af518b58';
+const TEST_CANVAS = 'eb86254b-cfc9-4b20-9b21-21b8af518b58_canvas';
 
 //temporary globals for testing
 const canvas_id = '123123123123123'
@@ -64,7 +64,7 @@ export default function UploadForm({ canvasID }) {
 
                         //uploads using a reference and the state 
                         await uploadBytes(uploadedImgRef, selectedFile);
-                        window.alert(`img uploaded! file#: ${imageName}`)
+                        // window.alert(`img uploaded! file#: ${imageName}`)
 
                         //disassemble the image ref into an object and send to thumbnail generator cloud function
                         const disassembledImgRef = {
@@ -74,23 +74,25 @@ export default function UploadForm({ canvasID }) {
                         
                         const thumbRes = await thumbnailgen(disassembledImgRef);
                         if (thumbRes.data.status === 'success') {
-                            window.alert(`thumbnail cloud function completed`)
+                            // window.alert(`thumbnail cloud function completed`)
                         }
 
                         const imgmetadata = {
                             uploadedBy: currentUser.uid,
                             imageName: imageName,
                             thumbName: disassembledImgRef.thumbName,
-                            imageWidth: returnedstatus.data.data.width,
-                            imageHeight: returnedstatus.data.data.height
+                            imageWidth: thumbRes.data.data.width,
+                            imageHeight: thumbRes.data.data.height
                         }
 
                         const metaRes = await imagemetagen(imgmetadata);
                         if (metaRes.data.status === 'success') {
-                            window.alert(`metagen cloud function completed`)
+                            // window.alert(`metagen cloud function completed`)
+                        } else {
+                            window.alert(`error in metagen cloud function`)
                         }
                         
-                        
+                        // window.alert(`postgen cloud function start`);
 
                         const postdata = {...imgmetadata,
                             postID: metaRes.data.data.post_id,
@@ -99,12 +101,16 @@ export default function UploadForm({ canvasID }) {
                             isPromoted: false,                               
                         }
 
+                        console.log ("post test 0 -------------------------------------------------")
+                        
                         const postRes = await postgen(postdata);
                         if (postRes.data.status === 'success') {
-                            window.alert(`postgen cloud function completed`)
+                            window.alert(`postgen cloud function completed`);
+                        } else {
+                            window.alert(`error in postgen cloud function`)
                         }
 
-
+                        console.log ("post test 5 -------------------------------------------------")
 
 
                     } else {

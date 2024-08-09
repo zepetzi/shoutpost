@@ -2,11 +2,13 @@
 const { thumbnailgen } = require('./src/thumbnailgen');
 const { imagemetagen } = require('./src/imagemetagen');
 const { canvasgen } = require('./src/canvasgen');
+const { postgen } = require('./src/postgen');
 
 module.exports = {
     thumbnailgen,
     imagemetagen,
-    canvasgen 
+    canvasgen,
+    postgen 
 };
 
 
