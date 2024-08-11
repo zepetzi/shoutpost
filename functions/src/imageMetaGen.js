@@ -5,7 +5,8 @@ const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { logger } = require("firebase-functions/v2");
 const { FieldValue } = require('firebase-admin/firestore');
 
-
+const IMAGE_BUCKET_NAME = 'shoutpost-17849.appspot.com'
+const THUMB_BUCKET_NAME = 'post_thumbs'
 
 const imagemetagen = onCall(async (request) => {
 
@@ -21,7 +22,9 @@ const imagemetagen = onCall(async (request) => {
         const data = {
             user_id: uploadedBy,
             image_name: imageName,
+            image_url: `https://storage.googleapis.com/${IMAGE_BUCKET_NAME}/${imageName}`,
             thumb_name: thumbName,
+            thumb_url: `https://storage.googleapis.com/${THUMB_BUCKET_NAME}/${thumbName}`,
             width: imageWidth,
             height: imageHeight,
             post_id: `${uuid()}_post`
