@@ -68,54 +68,54 @@ const [currPostTemp, setCurrPostTemp] = useState([]);
             
             //call the fetchCanvas function to do the initial grab
             fetchCanvas();
-
-            //now, set up the real-time listener to listen for updates ------------
-            const unsub = onSnapshot(doc(fsdb, "canvases", TEST_CANVAS), (canvasSnap) => {
-                if (canvasSnap.exists()) { 
-                    //get the array of postIDs if it exists
-                    const postIDArray = canvasSnap.data().current_posts;
+///----------------------------------------------------------------------------------------------------------------------------------------------
+            // //now, set up the real-time listener to listen for updates ------------
+            // const unsub = onSnapshot(doc(fsdb, "canvases", TEST_CANVAS), (canvasSnap) => {
+            //     if (canvasSnap.exists()) { 
+            //         //get the array of postIDs if it exists
+            //         const postIDArray = canvasSnap.data().current_posts;
                     
-                    //compare new postIDArray snapshot with current array and filter out only the new posts
-                    const newPostIDs = postIDArray.filter((postID) => !currPostTemp.includes(postID))
-                    //compare the array of the current posts (currPostTemp) and see which posts are not in newPostIDs
-                    const removedPostIDs = currPostTemp.filter((postID) => !newPostIDs.includes(postID))
+            //         //compare new postIDArray snapshot with current array and filter out only the new posts
+            //         const newPostIDs = postIDArray.filter((postID) => !currPostTemp.includes(postID))
+            //         //compare the array of the current posts (currPostTemp) and see which posts are not in newPostIDs
+            //         const removedPostIDs = currPostTemp.filter((postID) => !newPostIDs.includes(postID))
 
-                    //go through each postID and get the image and thumb url for each new one and add it to the posts state
-                    newPostIDs.forEach(async(postID) => {
+            //         //go through each postID and get the image and thumb url for each new one and add it to the posts state
+            //         newPostIDs.forEach(async(postID) => {
 
-                        const postSnap = await getDoc(doc(fsdb, "posts", postID));
+            //             const postSnap = await getDoc(doc(fsdb, "posts", postID));
 
-                        const postData = postSnap.data()
+            //             const postData = postSnap.data()
 
-                        const newPost = {
-                            id: postID,
-                            image: postData.image_url,
-                            thumb: postData.image_thumb,
-                            x: postData.x_pos,
-                            y: postData.y_pos
-                        }
-                        setPosts((prevPosts) => [...prevPosts, newPost])
-                    })
+            //             const newPost = {
+            //                 id: postID,
+            //                 image: postData.image_url,
+            //                 thumb: postData.thumb_url,
+            //                 x: postData.x_pos,
+            //                 y: postData.y_pos
+            //             }
+            //             setPosts((prevPosts) => [...prevPosts, newPost])
+            //         })
 
-                    //now do the same for the removed ones:
+            //         //now do the same for the removed ones:
 
-                    //so for each postID in removedPostIDs...
-                    removedPostIDs.forEach((postID) => {
+            //         //so for each postID in removedPostIDs...
+            //         removedPostIDs.forEach((postID) => {
 
-                        //set the post state to...
-                        setPosts((prevPosts) => {
-                            //the array we get back from filtering out the removed post
-                            return prevPosts.filter((postObject) => postObject.id !== postID)
-                        })
-                    })
+            //             //set the post state to...
+            //             setPosts((prevPosts) => {
+            //                 //the array we get back from filtering out the removed post
+            //                 return prevPosts.filter((postObject) => postObject.id !== postID)
+            //             })
+            //         })
 
-                    //set the most recent update to the temp state to use it on the next update
-                    setCurrPostTemp(postIDArray)
-                }
-            });
+            //         //set the most recent update to the temp state to use it on the next update
+            //         setCurrPostTemp(postIDArray)
+            //     }
+            // });
 
-            return unsub;
-            //---------------------------
+            // return unsub;
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
         } catch(error) {
             //add more error handling
