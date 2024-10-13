@@ -38,7 +38,7 @@ export default function UploadForm({ canvasID }) {
 
         } catch (error) {
             window.alert(error);
-            console.error(error);
+            console.error(error);    
         }
     }
 
